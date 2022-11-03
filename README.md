@@ -3,12 +3,12 @@ Jenkins
 Jenkins playground.
 
 Links:
-https://hub.docker.com/r/jenkins/jenkins
-https://github.com/jenkinsci/docker/blob/master/README.md
-https://plugins.jenkins.io
+- https://hub.docker.com/r/jenkins/jenkins
+- https://github.com/jenkinsci/docker/blob/master/README.md
+- https://plugins.jenkins.io
 
 Change Log:
-https://www.jenkins.io/blog/2022/06/28/require-java-11/
+- https://www.jenkins.io/blog/2022/06/28/require-java-11/
 
 Usage:
 ```bash
