@@ -1,0 +1,67 @@
+version: '3.9'
+
+services:
+
+  jenkins:
+    build:
+      context: .
+      target: jenkins
+    container_name: jenkins
+    hostname: jenkins
+    environment:
+      CASC_JENKINS_CONFIG: /usr/share/jenkins/ref/casc_configs/jenkins.yml
+      TZ: Asia/Manila
+      JN_ADMIN_ID: admin
+      JN_PROD_ID:  prod
+      JN_DEV_ID:   dev
+      # TODO
+      JN_ADMIN_PASS: admin
+      JN_PROD_PASS:  prod
+      JN_DEV_PASS:   dev
+    ports:
+      - "127.0.0.1:8080:8080"
+      - "50000"
+    volumes:
+      - ./jenkins.yml:/usr/share/jenkins/ref/casc_configs/jenkins.yml
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/login"]
+      start_period: 10s
+      retries: 3
+      interval: 5s
+      timeout: 5s
+    restart: always
+
+  secrets:
+    build:
+      context: .
+      target: secrets
+    container_name: secrets
+    hostname: secrets
+    environment:
+      JENKINS_USERNAME: admin
+      JENKINS_PASSWORD: admin
+    ports:
+      - "127.0.0.1:8102:80"
+    # entrypoint: ["tail", "-f", "/dev/null"]
+    entrypoint: ["python", "serve-secrets.py"]
+    depends_on:
+      - jenkins
+
+  slave:
+    container_name: slave
+    build:
+      context: .
+      target: slave
+    entrypoint: >
+      bash -c "
+        JENKINS_URL=http://jenkins:8080;
+        JENKINS_AGENT_NAME=slave;
+        JENKINS_SECRET=$$(curl secrets:80 | jq -r '.slave');
+        jenkins-slave -url $$JENKINS_URL $$JENKINS_SECRET $$JENKINS_AGENT_NAME
+      "
+    ports:
+      - "50000"
+    depends_on:
+      - jenkins
+      - secrets
+

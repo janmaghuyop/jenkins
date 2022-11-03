@@ -1,0 +1,3 @@
+configuration-as-code:1512.vb_79d418d5fc8
+role-strategy:3.2.0
+rebuild:1.34

@@ -1,0 +1,56 @@
+jenkins:
+  systemMessage: |
+    This jenkins is configured and managed as a code.
+  authorizationStrategy:
+    roleBased:
+      roles:
+        global:
+          - name: "admin"
+            description: "Jenkins administrators"
+            permissions:
+              - "Overall/Administer"
+            assignments:
+              - "admin"
+          - name: "read"
+            description: "Read-only users"
+            permissions:
+              - "Overall/Read"
+            assignments:
+              - "authenticated"
+          - name: "prod"
+            description: "Production-only users"
+            permissions:
+              - "Overall/Read"
+              - "Job/Cancel"
+              - "Job/Build"
+              - "Job/Read" 
+            assignments:
+              - "prod"
+        items:
+          - name: "dev_role"
+            description: "Dev-only users"
+            pattern: "^.*(staging|dev1|dev2|dev3|dev4)$"
+            permissions:
+            - "Job/Cancel"
+            - "Job/Build"
+            - "Job/Read" 
+            assignments:
+              - "dev"
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+        - id: ${JN_ADMIN_ID}
+          password: ${JN_ADMIN_PASS}
+  nodes:
+  - permanent:
+      launcher: jnlp
+      name: slave
+      numExecutors: 1
+      remoteFS: /home/jenkins
+      retentionStrategy: always
+
+security:
+  apiToken:
+    usageStatisticsEnabled: false
+
