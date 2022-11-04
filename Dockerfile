@@ -31,3 +31,16 @@ RUN apt update && \
     apt install -y curl jq
 USER jenkins
 
+
+
+
+
+FROM python:3.9-alpine AS jobs
+# https://pypi.org/project/jenkins-job-builder/
+RUN pip install --no-cache-dir jenkins-job-builder==4.1.0 && mkdir -p /etc/jenkins_jobs/jobs
+WORKDIR /etc/jenkins_jobs
+COPY jobs/ /etc/jenkins_jobs/jobs/
+COPY create-jobs.py .
+# test
+RUN jenkins-jobs test /etc/jenkins_jobs/jobs -o /tmp
+ENTRYPOINT ["python", "create-jobs.py"]

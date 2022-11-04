@@ -1,0 +1,9 @@
+- job:
+    name: test
+    description: |
+      test
+    project_type: freestyle
+    builders:
+      - shell: |
+          echo "test"
+    node: slave

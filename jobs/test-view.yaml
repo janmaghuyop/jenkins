@@ -1,0 +1,11 @@
+- view:
+    name: test
+    view-type: list
+    job-name:
+      - test
+    columns:
+      - status
+      - weather
+      - job
+      - last-success
+      - last-duration

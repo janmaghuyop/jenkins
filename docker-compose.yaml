@@ -65,3 +65,15 @@ services:
       - jenkins
       - secrets
 
+  jobs:
+    container_name: jobs
+    build:
+      context: .
+      target: jobs
+    environment:
+      JENKINS_USERNAME: admin
+      JENKINS_PASSWORD: admin
+    depends_on:
+      - jenkins
+      - secrets
+      - slave
